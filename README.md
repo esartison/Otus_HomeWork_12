@@ -14,10 +14,12 @@
 Решил создать 2 абсолютно одинаковые VM в Yandex Cloud и установить обе базы с настройками по умолчанию.
 
 **CockroachDB**
+
 <img width="692" height="803" alt="image" src="https://github.com/user-attachments/assets/5093bdaf-69ff-4f29-bc7a-9ffe89523683" />
 
 
 **PostgreSQL**
+
 <img width="720" height="822" alt="image" src="https://github.com/user-attachments/assets/fe005783-9953-433a-bbf0-27b21865459e" />
 
 
