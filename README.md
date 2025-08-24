@@ -55,26 +55,74 @@ INSERT INTO foo(id, name, data) SELECT i, 'name'||i, random() FROM generate_seri
 root@localhost:26257/mydb> SELECT sum(range_size_mb) FROM [SHOW RANGES FROM TABLE foo  WITH DETAILS];
             sum
 ---------------------------
-  11367.38162900000000000
+  14118.38162900000000000
 (1 row)
 
 Time: 1.823s total (execution 1.812s / network 0.011s)
 ```
-загрузил таблицу размером 11Gb.
+загрузил таблицу размером 14Gb.
 
+root@localhost:26257/mydb> select max(id) from foo;
+     max
+-------------
+  100000000
+(1 row)
 
+Time: 3ms total (execution 3ms / network 0ms)
 
 
 ## **(2) Установка PostgreSQL **
+Установил Postgres и создал базу
+```
+pgdb001:установка Postgres 
+sudo apt install postgresql
+fixing permissions on existing directory /var/lib/postgresql/16/main ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default max_connections ... 100
+selecting default shared_buffers ... 128MB
+selecting default time zone ... Etc/UTC
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+Setting up postgresql (16+257build1.1) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.5) ...
+Scanning processes...
+Scanning linux images...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+```
+<img width="1290" height="263" alt="image" src="https://github.com/user-attachments/assets/8d92b0a0-246a-4bb3-8930-722b44cd572b" />
+
+
+
+
+Создать тестовый набор данных
+```
+mydb=# CREATE TABLE foo (
+mydb(#     id INT PRIMARY KEY,
+mydb(#     name VARCHAR(255),
+mydb(# data VARCHAR(4000)
+mydb(# );
+CREATE TABLE
+mydb=#
+
+
 
 ```
-pgdb001:регистрация репозитория postgresql.org
-sudo apt install -y postgresql-common sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+загрузил таблицу размером 14Gb.
 
-pgdb001:установка Postgres 17
-sudo apt install postgresql-17
 
-```
 
 🗂 Формат сдачи
 
@@ -86,22 +134,3 @@ sudo apt install postgresql-17
 Развёрнут мульти-мастер кластер в доступной среде (российское облако или локально).
 Проведено тестирование с данными объёмом не менее 10 ГБ.
 Представлен отчёт с описанием развертывания, проблем и результатов тестов.
-
-
-(a) Установка Clickhouse
-```
-apt-get install -y apt-transport-https ca-certificates dirmngr
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 8919F6BD2B48D754
-echo "deb https://packages.clickhouse.com/deb stable main" | sudo tee /etc/apt/sources.list.d/clickhouse.list
-apt update
-apt-get install -y clickhouse-server clickhouse-client
-```
-
-(б) разрешаем удаленные подключения к нашему серверу:
-```
-student:~$ sudo diff /etc/clickhouse-server/config.xml /etc/clickhouse-server/config.xml_bkp
-269c269
-<     <listen_host>0.0.0.0</listen_host> 
----
->     <!-- <listen_host>0.0.0.0</listen_host> -->
-```
